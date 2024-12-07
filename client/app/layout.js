@@ -6,10 +6,13 @@ import Head from "next/head";
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <Head />
-      <body className="bg-light">
-        {children}
+      <Head>
+        <title>My Application</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </Head>
+      <body className="bg-light" >
 
+        {children}
         <Link
           href="https://bit.ly/3YoCCRH"
           target="_blank"
@@ -35,6 +38,7 @@ export default function RootLayout({ children }) {
             <path d="M21 21.5v-4.5h-4.5" />
           </svg>{" "}
         </Link>
+
       </body>
     </html>
   );

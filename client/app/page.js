@@ -5,13 +5,10 @@ import { Row, Col, Card, Form, Button, Image } from "react-bootstrap";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
-// import hooks
-import useMounted from "@/hooks/useMounted";
 import { useState } from "react";
 import { login as loginUrl } from "./api/api";
 const home = () => {
   const router = useRouter();
-
   const [user, setUser] = useState({
     email: "",
     password: "",
@@ -26,19 +23,13 @@ const home = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: user.email,
+          user_info: user.email,
           password: user.password,
         }),
       });
-
-      if (!query.ok) {
-        throw new Error(`HTTP error! Status: ${query.status}`);
-      }
-
       const data = await query.json();
-
-      const setData = JSON.stringify(data);
-      if (data.status === "success") {
+      const setData = data;
+      if (data.status === 200) {
         // Save data to sessionStorage
         sessionStorage.setItem("userData", setData);
         // Get saved data from sessionStorage
@@ -57,7 +48,7 @@ const home = () => {
         });
         Toast.fire({
           icon: "error",
-          title: data.status,
+          title: data.message,
         });
       }
     } catch (error) {
@@ -94,12 +85,12 @@ const home = () => {
             </div>
             {/* Form */}
 
-            <Form>
+            <Form onSubmit={login}>
               {/* Username */}
               <Form.Group className="mb-3" controlId="username">
                 <Form.Label>Username or email</Form.Label>
                 <Form.Control
-                  type="email"
+                  type="text"
                   name="email"
                   placeholder="Enter address here"
                   required=""
@@ -136,7 +127,7 @@ const home = () => {
                 <div className="d-md-flex justify-content-between mt-4">
                   <div>
                     <Link
-                      href="/auth/forget-password"
+                      href="/auth/password"
                       className="text-inherit fs-5"
                     >
                       Forgot your password?

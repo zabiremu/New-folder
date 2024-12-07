@@ -1,7 +1,7 @@
 import React from "react";
 import { Form } from "react-bootstrap";
 
-const input01 = ({ title, name, type, change = "", multiple = false, offer= false, requiqred= false }) => {
+const input01 = ({ title, name, value = null, type, change = "", multiple = false, offer = false, requiqred = false }) => {
   return (
     <>
       {multiple === false ? (
@@ -13,6 +13,7 @@ const input01 = ({ title, name, type, change = "", multiple = false, offer= fals
               placeholder={title}
               name={name}
               onChange={change}
+              defaultValue={value ?? ''}
             />
           </Form.Group>
         </>
@@ -26,6 +27,7 @@ const input01 = ({ title, name, type, change = "", multiple = false, offer= fals
               name={name}
               multiple
               onChange={change}
+              defaultValue={value ?? ''}
             />
           </Form.Group>
         </>

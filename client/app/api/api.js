@@ -1,2 +1,3 @@
-export const login = "http://localhost:7000/api/login";
-export const forgetPassword = "http://localhost:7000/api/forget-password";
+export const login = "http://127.0.0.1:8000/api/login";
+export const register = "http://127.0.0.1:8000/api/register";
+export const products = "http://127.0.0.1:8000/api/product/store";

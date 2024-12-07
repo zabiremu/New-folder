@@ -23,7 +23,7 @@ class AuthRepository implements AuthRepositoryInterface
                 // Create token
                 $token = $user->createToken('token-name')->plainTextToken;
                 return response()->json([
-                    'status' => 201,
+                    'status' => 200,
                     'message' => 'User logged in successfully',
                     'token' => $token,
                     'data' => $user
@@ -43,9 +43,13 @@ class AuthRepository implements AuthRepositoryInterface
 
     public function register($data)
     {
-        $data['password'] = Hash::make($data['password']);
-        $this->user->create($data);
-        return response()->json(['status' => 201, 'message' => 'User registered successfully']);
+        try {
+            $data['password'] = Hash::make($data['password']);
+            $this->user->insert($data);
+            return response()->json(['status' => 200, 'message' => 'User registered successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 500, 'message' => $e->getMessage()]);
+        }
     }
 
     public function destroy($id)

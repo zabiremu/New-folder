@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // import node module libraries
 import {
@@ -11,7 +11,6 @@ import {
   Table,
   Tab,
   Container,
-  Image,
   Button,
   Modal,
   DropdownButton,
@@ -32,6 +31,9 @@ const page = () => {
   const [statusUpdate, setStatusUpdate] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const [products, setProducts] = useState([]);
+
   const handleStatusShow = () => {
     setStatus(true);
   };
@@ -42,6 +44,23 @@ const page = () => {
     setStatusUpdate(!statusUpdate);
     setStatus(false);
   };
+
+  useEffect(() => {
+    // Define an async function inside useEffect
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch("http://127.0.0.1:8000/api/product");
+        const data = await res.json();
+        // Assuming the response contains a `data` field that holds product details
+        setProducts(data?.data || []); // Use fallback to ensure no errors occur
+      } catch (error) {
+        console.error("Error fetching products:", error.message);
+      }
+    };
+    fetchProducts(); // Call the async function
+    
+  }, []); // Empty dependency array ensures it runs only once
+
   const ctp12 = { paddingTop: "12px" };
   return (
     <>
@@ -72,75 +91,59 @@ const page = () => {
                             "#",
                             "SKQ",
                             "Product Name",
-                            "Images",
                             "Stock",
-                            "Unit",
-                            "Status",
                             "Active",
                           ]}
                         />
                         <tbody>
-                          <tr>
-                            <th
-                              scope="row"
-                              style={ctp12}
-                              className="text-center"
-                            >
-                              1
-                            </th>
-                            <td className="text-center" style={ctp12}>
-                              ABC12345
-                            </td>
-                            <td className="text-center" style={ctp12}>
-                              Zabir
-                            </td>
-                            <td className="text-center">
-                              <Image
-                                src="/images/avatar/avatar-1.jpg"
-                                alt="image"
-                                className="avatar-md avatar rounded-circle"
-                              />
-                            </td>
+                          {products?.map((product, item) => {
+                            return (
+                              <>
+                                <tr>
+                                  <th
+                                    scope="row"
+                                    style={ctp12}
+                                    className="text-center"
+                                  >
+                                    {item + 1}
+                                  </th>
+                                  <td className="text-center" style={ctp12}>
+                                    {product?.product_name}
+                                  </td>
+                                  <td className="text-center" style={ctp12}>
+                                    {product?.stock}
+                                  </td>
 
-                            <td className="text-center" style={ctp12}>
-                              21
-                            </td>
-                            <td className="text-center" style={ctp12}>
-                              KG
-                            </td>
-                            <td className="text-center" style={ctp12}>
-                              <Form.Check // prettier-ignore
-                                type="switch"
-                                id="custom-switch"
-                                className="d-flex justify-content-center"
-                                label=""
-                                checked={statusUpdate}
-                                onChange={handleStatusShow}
-                              />
-                            </td>
-                            <td className="text-center">
-                              <DropdownButton
-                                as={ButtonGroup}
-                                key="Primary"
-                                id={`dropdown-variants-Primary`}
-                                variant=""
-                                title="Action"
-                                className="me-1 mb-2 mb-lg-0 btn-sm"
-                              >
-                                <Dropdown.Item eventKey="2">
-                                  <Link href="/dashboard/products/edit">
-                                    Edit
-                                  </Link>
-                                </Dropdown.Item>
-                                <Dropdown.Item
-                                  eventKey="1"
-                                  onClick={handleShow}
-                                >
-                                  Delete
-                                </Dropdown.Item>
-                              </DropdownButton>
-                            </td>
-                          </tr>
+                                  <td className="text-center" style={ctp12}>
+                                    {product?.price}
+                                  </td>
+
+                                  <td className="text-center">
+                                    <DropdownButton
+                                      as={ButtonGroup}
+                                      key="Primary"
+                                      id={`dropdown-variants-Primary`}
+                                      variant=""
+                                      title="Action"
+                                      className="me-1 mb-2 mb-lg-0 btn-sm"
+                                    >
+                                      <Dropdown.Item eventKey="2">
+                                        <Link href={`/dashboard/products/edit/${product?.id}`}>
+                                          Edit
+                                        </Link>
+                                      </Dropdown.Item>
+                                      <Dropdown.Item
+                                        eventKey="1"
+                                        onClick={handleShow}
+                                      >
+                                        Delete
+                                      </Dropdown.Item>
+                                    </DropdownButton>
+                                  </td>
+                                </tr>
+                              </>
+                            )
+                          })}
                         </tbody>
                       </Table>
 

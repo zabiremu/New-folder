@@ -2,19 +2,28 @@
 "use client";
 // import node module libraries
 import { Col, Row, Container } from "react-bootstrap";
-
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
 // import widget as custom components
 import { PageHeading } from "@/widgets";
-
+import { hydrateUser, setUser, clearUser } from '../../store/userSlice';
 // import sub components
 import { ProfileHeader } from "@/sub-components";
 import Input01 from "../components/form/input01";
 import CustomButton from "../components/button/button";
 import Title from "../components/form/title";
+
 const Profile = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    // Parse the user data from JSON and dispatch a valid action
+    const userData = dispatch(hydrateUser()); // hydrateUser should be an action creator
+    console.log(userData);
+  }, [dispatch]);
   return (
     <Container fluid className="p-6">
       {/* Page Heading */}
+
       <PageHeading heading="User Information" />
 
       {/* Profile Header  */}

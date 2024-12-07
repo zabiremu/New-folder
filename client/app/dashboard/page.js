@@ -18,7 +18,7 @@ const Home = () => {
   return (
     <>
       <Head>
-        <title>My SEO-Optimized Page</title>
+        <title>Pos</title>
       </Head>
       <Fragment>
         <div className="bg-primary pt-10 pb-21"></div>

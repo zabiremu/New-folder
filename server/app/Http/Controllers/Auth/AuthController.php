@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreAuthRequest;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -16,9 +16,23 @@ class AuthController extends Controller
         return $this->authService->login($data);
     }
 
-    public function register(StoreAuthRequest $request)
+    public function register(Request $request)
     {
-        $data = $request->validated();
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'email' => 'required|email|string|unique:users,email',
+                'user_name' => 'required|string|unique:users,user_name',
+                'password' => 'required|string|min:8',
+                'confirm_password' => 'required|string|min:8|same:password',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        $data = $request->all();
+        unset($data['confirm_password']);
         return $this->authService->register($data);
     }
 
